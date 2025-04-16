@@ -54,12 +54,16 @@ public class Application {
 
             BeginTextureMode(target);
                 ClearBackground(white);  
+                DrawTexturePro(boardTexture,
+                    rect(0.0f, 0.0f, (float)boardTexture.width(), -((float)boardTexture.height())),
+                    rect(0.0f, 0.0f, (float)appScreenWidth, (float)appScreenHeight),
+                    Vector2Zero(), 0.0f, white);
             EndTextureMode();
 
             BeginDrawing();
                 ClearBackground(black);
                 DrawTexturePro(target.texture(),
-                    rect(0.0f, 0.0f, (float)target.texture().width(), -((float)target.texture().height())),
+                    rect(0.0f, 0.0f, (float)target.texture().width(), ((float)target.texture().height())),
                     rect(renderOffsetX, renderOffsetY, renderWidth, renderHeight),
                     Vector2Zero(), 0.0f, white);
             EndDrawing();
