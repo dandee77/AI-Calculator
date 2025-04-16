@@ -2,6 +2,11 @@ package src;
 import static com.raylib.Raylib.*;
 import static src.Utils.*;
 
+import com.raylib.Raylib.Camera2D;
+import com.raylib.Raylib.RenderTexture;
+import com.raylib.Raylib.Texture;
+import com.raylib.Raylib.Vector2;
+
 public class Application {
 
     private RenderTexture target;
@@ -39,12 +44,10 @@ public class Application {
             float scale = Math.min((float)GetScreenWidth()/appScreenWidth, (float)GetScreenHeight()/appScreenHeight);
             Vector2 mouse = GetMousePosition();
             Vector2 virtualMouse = Vector2Zero();
-            virtualMouse.x((mouse.x() - ((float)GetScreenWidth() - ((float)appScreenWidth * scale)) * 0.5f) / 2);
-            virtualMouse.y((mouse.y() - ((float)GetScreenHeight() - ((float)appScreenHeight * scale)) * 0.5f) / 2);
+            virtualMouse.x((mouse.x() - (GetScreenWidth() - (appScreenWidth * scale)) * 0.5f) / scale);
+            virtualMouse.y((mouse.y() - (GetScreenHeight() - (appScreenHeight * scale)) * 0.5f) / scale);
             virtualMouse = Vector2Clamp(virtualMouse, Vector2Zero(), vec2((float)appScreenWidth, (float)appScreenHeight));
-            int offsetX = (int)(-((float)GetScreenWidth() - (appScreenWidth * scale)) * 0.5f);
-            int offsetY = (int)(-((float)GetScreenHeight() - (appScreenHeight * scale)) * 0.5f);
-            SetMouseOffset(offsetX, offsetY);
+            SetMouseOffset((int)(-(GetScreenWidth() - (appScreenWidth * scale)) * 0.5f), (int)(-(GetScreenHeight() - (appScreenHeight * scale)) * 0.5f));
             SetMouseScale(1 / scale, 1 / scale);
 
             float renderWidth = appScreenWidth * scale;
@@ -55,15 +58,21 @@ public class Application {
             BeginTextureMode(target);
                 ClearBackground(white);  
                 DrawTexturePro(boardTexture,
-                    rect(0.0f, 0.0f, (float)boardTexture.width(), -((float)boardTexture.height())),
+                    rect(0.0f, 0.0f, (float)boardTexture.width(), ((float)boardTexture.height())),
                     rect(0.0f, 0.0f, (float)appScreenWidth, (float)appScreenHeight),
                     Vector2Zero(), 0.0f, white);
+
+                DrawTexturePro(cursorTexture,
+                    rect(0.0f, 0.0f, (float)cursorTexture.width(), ((float)cursorTexture.height())),
+                    rect(GetMouseX(), GetMouseY(), (float)cursorTexture.width(), (float)cursorTexture.height()),
+                    Vector2Zero(), 0.0f, white);
+                
             EndTextureMode();
 
             BeginDrawing();
                 ClearBackground(black);
                 DrawTexturePro(target.texture(),
-                    rect(0.0f, 0.0f, (float)target.texture().width(), ((float)target.texture().height())),
+                    rect(0.0f, 0.0f, (float)target.texture().width(), -((float)target.texture().height())),
                     rect(renderOffsetX, renderOffsetY, renderWidth, renderHeight),
                     Vector2Zero(), 0.0f, white);
             EndDrawing();
